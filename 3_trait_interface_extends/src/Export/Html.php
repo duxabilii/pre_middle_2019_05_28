@@ -1,13 +1,13 @@
 <?php
 
-namespace Classes\Export;
+namespace Export;
 
 use Interfaces\ExportInterface;
-use Traits\HelperTrait;
+use Traits\ExportTrait;
 
 class Html implements ExportInterface
 {
-    use HelperTrait;
+    use ExportTrait;
 
     /**
      * Export data
@@ -25,7 +25,7 @@ class Html implements ExportInterface
                 $this->filename);
             file_put_contents($exportFile, $string);
         }
-        unlink($this->filename);
+        @unlink($this->filename);
         return true;
     }
 

@@ -4,11 +4,6 @@ namespace Interfaces;
 
 interface ExportInterface
 {
-    /**
-     * Export constructor.
-     * @param string $dir
-     */
-    public function __construct(string $dir);
 
     /**
      * Header template

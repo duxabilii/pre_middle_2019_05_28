@@ -1,9 +1,7 @@
 <?php
 // SOME SETTINGS
 
-use Classes\Db;
-
-require('vendor/autoload.php');
+require('autoload.php');
 
 session_start();
 

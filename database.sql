@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `01_messages`;
 CREATE TABLE `01_messages`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `text` text CHARACTER SET latin1 COLLATE utf8_general_ci NULL,
+  `text` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `created_at` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -39,9 +39,9 @@ CREATE TABLE `01_messages`  (
 DROP TABLE IF EXISTS `01_users`;
 CREATE TABLE `01_users`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) CHARACTER SET latin1 COLLATE utf8_general_ci NOT NULL,
-  `password` varchar(64) CHARACTER SET latin1 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET latin1 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `last_login` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
   `is_suspicious` tinyint(4) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,

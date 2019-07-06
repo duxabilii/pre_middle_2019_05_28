@@ -1,9 +1,5 @@
 <?php
 
-namespace Classes;
-
-use PDO;
-
 /**
  * Class Db
  */

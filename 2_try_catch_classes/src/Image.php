@@ -38,17 +38,16 @@ class Image
         $contents = fread($handle, filesize($image));
         fclose($handle);
 
-        $this->image = imagecreatefromstring($contents);
+        $this->image = @imagecreatefromstring($contents);
 
         $this->filename = pathinfo($image, PATHINFO_FILENAME);
-
-        if ($this->image === false) {
-            $this->error();
-        }
     }
 
     public function resize(int $max_width, int $max_height)
     {
+        if ($this->image === false) {
+            return $this->error();
+        }
         $im_width = imagesx($this->image);
         $im_height = imagesy($this->image);
 
@@ -76,14 +75,13 @@ class Image
             $im_width,
             $im_height
         );
-        $filename = 'Resize/' . $this->filename . '_' . $newDimensions['width'] . 'x' . $newDimensions['height'] . '.png';
 
-        imagepng(
-            $thumb,
-            $filename
-        );
+        ob_start();
+        imagepng($thumb);
+        $imagedata = ob_get_contents();
+        ob_end_clean();
         imagedestroy($thumb);
-        return $filename;
+        return $imagedata;
     }
 
     /**
@@ -95,7 +93,7 @@ class Image
         if ($image === false) {
             throw new \Exeption('Unable to initialize image');
         }
-        $bg_col = $this->htmlToRGD(self::ERROR_BG);
+        $bg_col = $this->htmlToRGB(self::ERROR_BG);
         $bg_col = imagecolorallocate(
             $image,
             $bg_col['R'],
@@ -104,21 +102,26 @@ class Image
         );
         imagefill($image, 0, 0, $bg_col);
 
-        $text_color = $this->htmlToRGD(self::ERROR_TEXT);
+        $text_color = $this->htmlToRGB(self::ERROR_TEXT);
         $text_color = imagecolorallocate(
             $image,
             $text_color['R'],
             $text_color['G'],
             $text_color['B']
         );
-
-        imagestring($image, 10, 30, (self::ERROR_HEIGHT / 2) - 10,
-            self::ERROR_MESSAGE, $text_color);
-        imagepng(
+        ob_start();
+        imagestring(
             $image,
-            'Resize/' . $this->filename . '_error.png'
-        );
+            10,
+            30,
+            (self::ERROR_HEIGHT / 2) - 10,
+            self::ERROR_MESSAGE,
+            $text_color);
+        imagepng($image);
+        $imagedata = ob_get_contents();
+        ob_end_clean();
         imagedestroy($image);
+        return $imagedata;
     }
 
     /**
@@ -127,7 +130,7 @@ class Image
      * @param string $htmlColor
      * @return array
      */
-    private function htmlToRGD(string $htmlColor)
+    private function htmlToRGB(string $htmlColor)
     {
         if (!preg_match('/^[0-9A-F]{6}/', $htmlColor)) {
             throw new \Exeption('Bad HTML color format');
@@ -155,14 +158,19 @@ class Image
         int $max_width,
         int $max_height
     ) {
-        if ($im_width > $max_width || $im_height > $max_height) {
-            if ($im_width > $im_height) {
-                $newHeight = floor(($im_height / $im_width) * $max_width);
-                $newWidth = $max_width;
-            } else {
-                $newWidth = floor(($im_width / $im_height) * $max_height);
-                $newHeight = $max_height;
-            }
+        if ($im_width > $im_height) {
+            $newWidth = $max_width;
+            $newHeight = $im_height / $im_width * $max_width;
+        }
+
+        if ($im_width < $im_height) {
+            $newWidth = $im_width / $im_height * $max_height;
+            $newHeight = $max_height;
+        }
+
+        if ($im_width === $im_height) {
+            $newWidth = $im_width;
+            $newHeight = $im_height;
         }
 
         return [

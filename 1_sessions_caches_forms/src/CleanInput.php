@@ -1,9 +1,5 @@
 <?php
 
-
-namespace Classes;
-
-
 class CleanInput
 {
     static $js = '#(script|alert|eval|prompt|confirm|cmd|passthru|eval|exec|expression|system|fopen|fsockopen|file|file_get_contents|readfile|unlink)#uisU';

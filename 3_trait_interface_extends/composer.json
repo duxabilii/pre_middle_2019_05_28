@@ -1,9 +1,0 @@
-{
-    "autoload": {
-        "psr-4": {
-            "Interfaces\\": "Interfaces",
-            "Traits\\": "Traits",
-            "Classes\\": "Classes"
-        }
-    }
-}

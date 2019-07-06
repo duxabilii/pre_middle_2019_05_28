@@ -1,22 +1,27 @@
 <?php
 
-namespace Classes\Export;
+namespace Export;
 
 use Interfaces\ExportInterface;
-use Traits\HelperTrait;
+use Traits\ExportTrait;
 
 class Csv implements ExportInterface
 {
-    use HelperTrait;
+    use ExportTrait;
 
     /**
      * Export data
      *
      * @return bool
+     * @throws \Exception
      */
     public function export()
     {
-        $data = $this->getData();
+        try {
+            $data = $this->getData();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
 
         fputcsv($this->exportFile, $data['header']);
         foreach ($data['body'] as $row) {
@@ -28,7 +33,7 @@ class Csv implements ExportInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function startExport()
     {

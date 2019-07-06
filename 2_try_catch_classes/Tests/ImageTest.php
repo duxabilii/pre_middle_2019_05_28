@@ -18,19 +18,19 @@ class ImageTest extends TestCase
         foreach (
             [
                 '300x210' => '100x70',
-                '400x600' => '133x200',
+                '400x600' => '133x200', // Вероятная ошибка в ТЗ. Необходимо списать БОЛЬШУЮ сторону (600 / 200 = 3, 400 / 3 = 133)
                 '400x800' => '100x200',
                 '400x1000' => '80x200',
                 '200x500' => '80x200'
             ] as $old => $new) {
             $this->image = new Image('Tests/testImage_' . $old . '.jpg');
-            $this->assertEquals($this->image->getFilename(),
-                'testImage_' . $old);
-
-            $resize = $this->image->resize(100, 200);
-            $newDims = getimagesize($resize);
-            unlink($resize);
-            $this->assertEquals($new, $newDims[0] . 'x' . $newDims[1]);
+            $img = imagecreatefromstring($this->image->resize(100, 200));
+            $imageX = imagesx($img);
+            $imageY = imagesy($img);
+            $this->assertEquals(
+                $imageX . 'x' . $imageY,
+                $new
+            );
         }
     }
 

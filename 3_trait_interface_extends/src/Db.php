@@ -1,9 +1,5 @@
 <?php
 
-namespace Classes;
-
-use PDO;
-
 /**
  * Class Db
  */
@@ -11,8 +7,8 @@ class Db
 {
     const DB_HOST = 'localhost';
     const DB_USER = 'mysql';
-    const DB_PASS = 'mysql123';
-    const DB_NAME = 'pre_middle';
+    const DB_PASS = 'mysql';
+    const DB_NAME = 'premiddle';
     /**
      * @var null
      */

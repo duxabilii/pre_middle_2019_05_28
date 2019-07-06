@@ -1,13 +1,13 @@
 <?php
 
-namespace Classes\Export;
+namespace Export;
 
 use Interfaces\ExportInterface;
-use Traits\HelperTrait;
+use Traits\ExportTrait;
 
 class Xml implements ExportInterface
 {
-    use HelperTrait;
+    use ExportTrait;
 
     /**
      * Export data

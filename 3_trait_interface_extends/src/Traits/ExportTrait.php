@@ -2,9 +2,7 @@
 
 namespace Traits;
 
-use Classes\Db;
-
-trait HelperTrait
+trait ExportTrait
 {
     private $dir;
 
@@ -18,17 +16,20 @@ trait HelperTrait
      */
     public function __construct(string $dir)
     {
-        $this->dir = 'Export/' . $dir;
-        $this->filename = $this->dir . DIRECTORY_SEPARATOR . time() . '.' . strtolower($dir);
+        $this->dir = $dir;
+        $reflect = new \ReflectionClass($this);
+        $this->filename = $this->dir .
+            DIRECTORY_SEPARATOR .
+            time().
+            '.' .
+            $reflect->getShortName();
 
-        if (
-            !$this->checkDir($this->dir)
-            AND
-            !$this->createDir($this->dir)
-            AND
-            !$this->exportFile
-        ) {
-            throw new \Exception('Unable to create directory for export');
+        try {
+            if (!$this->checkDir($this->dir)) {
+                $this->createDir($this->dir);
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
         $this->exportFile = fopen($this->filename, 'w');
     }
@@ -43,7 +44,7 @@ trait HelperTrait
      */
     public function getData()
     {
-        $db = Db::getInstance();
+        $db = \Db::getInstance();
         $data = $db->query('SELECT * FROM `03_products`');
         if (!$data) {
             throw new \Exception('Empty dataset');
@@ -70,6 +71,9 @@ trait HelperTrait
      */
     public function createDir(string $dir)
     {
-        return mkdir($dir);
+        if (!mkdir($dir, true)) {
+            throw new \Exception('Unable to create directory: ' . $dir);
+        }
+        return true;
     }
 }
